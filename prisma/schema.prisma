@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  bookings Booking[]
+  createdAt DateTime @default(now())
+}
+
+model Room {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  capacity  Int       @default(6)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+/// 予約は [start,end) の半開区間扱い（UI は 30min/60min 単位推奨）
+/// ※ 時間帯重複はアプリ側でチェックします（DB排他制約は Prisma では未サポートのため）
+model Booking {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  roomId  Int
+  start   DateTime
+  end     DateTime
+
+  user    User     @relation(fields: [userId], references: [id])
+  room    Room     @relation(fields: [roomId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([roomId, start])
+  @@index([roomId, end])
+}
