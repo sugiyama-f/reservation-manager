@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma";
+import bcrypt from "bcryptjs";
 
 async function main() {
   // Rooms
@@ -20,14 +21,15 @@ async function main() {
     }),
   ]);
 
-  // Demo User
+  // Demo User (password: demo1234)
+  const passwordHash = await bcrypt.hash("demo1234", 10);
   const user = await prisma.user.upsert({
     where: { email: "demo@example.com" },
-    update: {},
-    create: { name: "Demo User", email: "demo@example.com" },
+    update: { name: "Demo User", passwordHash },
+    create: { name: "Demo User", email: "demo@example.com", passwordHash },
   });
 
-  // Sample booking: 今日の10:00-11:00 を Room A に
+  // Sample booking: today 10:00-11:00 on Room A
   const today = new Date();
   today.setMinutes(0, 0, 0);
   const start = new Date(today);
@@ -41,7 +43,7 @@ async function main() {
     create: { userId: user.id, roomId: rooms[0].id, start, end },
   });
 
-  console.log("Seed completed.");
+  console.log("Seed completed. login: demo@example.com / demo1234");
 }
 
 main()

@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
-import { ReactNode } from "react";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import { theme } from "@/lib/theme";
+import Providers from "./providers";
 
 export const metadata: Metadata = { title: "Reservation Manager" };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="ja">
-      <body /* className={roboto.className} */>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
+      <body>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

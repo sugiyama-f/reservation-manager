@@ -1,15 +1,15 @@
 "use client";
 
 import { Container, Grid, Snackbar, Alert } from "@mui/material";
-import HeaderBar from "./components/HeaderBar";
-import ReservationsList from "./components/ReservationsList";
-import NewBookingForm from "./components/NewBookingForm";
-import EditBookingDialog from "./components/EditBookingDialog";
-import { useRooms } from "./hooks/useRooms";
-import { useBookings } from "./hooks/useBookings";
+import HeaderBar from "@/app/components/HeaderBar";
+import ReservationsList from "@/app/components/ReservationsList";
+import NewBookingForm from "@/app/components/NewBookingForm";
+import EditBookingDialog from "@/app/components/EditBookingDialog";
+import { useRooms } from "@/app/hooks/useRooms";
+import { useBookings } from "@/app/hooks/useBookings";
 import { useMemo, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import type { Booking } from "./types";
+import type { Booking } from "@/app/types";
 
 export default function Page() {
   const [date, setDate] = useState<Dayjs>(dayjs());
@@ -22,9 +22,13 @@ export default function Page() {
     open: boolean;
     msg: string;
     sev: "success" | "error";
-  }>({ open: false, msg: "", sev: "success" });
+  }>({
+    open: false,
+    msg: "",
+    sev: "success",
+  });
 
-  // 編集
+  // 編集ダイアログ
   const [editOpen, setEditOpen] = useState(false);
   const [target, setTarget] = useState<Booking | null>(null);
 
@@ -56,6 +60,7 @@ export default function Page() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <HeaderBar date={date} onDateChange={setDate} />
+
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <ReservationsList
